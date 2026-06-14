@@ -39,3 +39,59 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* Validation Styles */
+.form-control.input-validation-error {
+  border-color: #dc3545;
+  border-width: 2px;
+}
+
+.form-control.input-validation-error:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.text-danger {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+input.input-validation-error,
+textarea.input-validation-error,
+select.input-validation-error {
+  border-color: #dc3545 !important;
+}
+
+/* Persistent Validation Alert Styles */
+div[asp-validation-summary].alert-danger {
+  border-left: 5px solid #dc3545;
+  font-weight: 500;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  animation: slideInAlert 0.3s ease-out;
+  margin-bottom: 1.5rem;
+}
+
+div[asp-validation-summary].alert-danger .btn-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/* Slide in animation for validation alerts */
+@keyframes slideInAlert {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ensure validation summary doesn't fade out */
+div[asp-validation-summary].alert.fade.show {
+  opacity: 1 !important;
+}
+
