@@ -56,6 +56,16 @@ body {
   font-size: 0.875rem;
 }
 
+/* Smooth hover effects for navigation links */
+.nav-link {
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+.nav-link:hover, .nav-link:focus {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+
 input.input-validation-error,
 textarea.input-validation-error,
 select.input-validation-error {

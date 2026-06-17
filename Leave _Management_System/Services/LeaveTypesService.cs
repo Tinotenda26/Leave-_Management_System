@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Leave__Management_System.Data;
 using Leave__Management_System.Models.LeaveTypes;
-using Microsoft.Identity.Client;
-using Leave_Management_System.Models.LeaveTypes;
 
 namespace Leave__Management_System.Services
 {

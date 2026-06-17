@@ -1,6 +1,6 @@
 ﻿using Leave__Management_System.Models.LeaveTypes;
 using System.ComponentModel.DataAnnotations;
-namespace Leave_Management_System.Models.LeaveTypes;
+namespace Leave__Management_System.Models.LeaveTypes;
 
 public class LeaveTypeEditVM : BaseLeaveTypeVM
 {

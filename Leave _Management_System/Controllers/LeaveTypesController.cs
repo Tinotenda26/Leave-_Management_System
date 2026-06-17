@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Leave__Management_System.Data;
 using Leave__Management_System.Models.LeaveTypes;
 using AutoMapper;
-using Leave_Management_System.Models.LeaveTypes;
 
 public class LeaveTypesController : Controller
 {
@@ -18,6 +18,7 @@ public class LeaveTypesController : Controller
     }
 
     // GET: LEAVETYPES
+    [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> Index()    
     {
         var data = await _context.LeaveTypes.ToListAsync();
@@ -27,6 +28,7 @@ public class LeaveTypesController : Controller
     }
 
     // GET: LEAVETYPES/Details/5
+    [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -49,6 +51,7 @@ public class LeaveTypesController : Controller
     }
 
     // GET: LEAVETYPES/Create
+    [Authorize(Roles = "Supervisor")]
     public IActionResult Create()
     {
         return View();
@@ -59,6 +62,7 @@ public class LeaveTypesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> Create([Bind("Id,Name,NumberOfDays")] LeaveTypeCreateVM leavetypeCreate)
     {
         if (await CheckIfLeaveTypeNameExists(leavetypeCreate.Name))
@@ -79,6 +83,7 @@ public class LeaveTypesController : Controller
    
 
     // GET: LEAVETYPES/Edit/5
+    [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -100,6 +105,7 @@ public class LeaveTypesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,NumberOfDays")] LeaveTypeEditVM leavetypeEditVM)
     {
         if (id == null)
@@ -146,6 +152,7 @@ public class LeaveTypesController : Controller
     }
 
     // GET: LEAVETYPES/Delete/5
+    [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -167,6 +174,7 @@ public class LeaveTypesController : Controller
     // POST: LEAVETYPES/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Supervisor")]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
         var leavetype = await _context.LeaveTypes.FindAsync(id);

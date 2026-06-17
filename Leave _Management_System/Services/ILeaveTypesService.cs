@@ -1,5 +1,4 @@
 ﻿using Leave__Management_System.Models.LeaveTypes;
-using Leave_Management_System.Models.LeaveTypes;
 
 namespace Leave__Management_System.Services
 {
