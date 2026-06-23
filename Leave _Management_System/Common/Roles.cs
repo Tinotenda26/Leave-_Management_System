@@ -7,3 +7,4 @@
         public const string Employee = "Employee";
     }
 }
+

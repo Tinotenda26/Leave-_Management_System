@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using Leave__Management_System.Services.LeaveAllocation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Leave__Management_System.Areas.Identity.Pages.Account;
@@ -10,6 +11,7 @@ public class RegisterModel : PageModel
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly ILeaveAllocationsService _leaveAllocationsService;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserStore<ApplicationUser> _userStore;
     private readonly IUserEmailStore<ApplicationUser> _emailStore;
@@ -21,6 +23,7 @@ public class RegisterModel : PageModel
         IUserStore<ApplicationUser> userStore,
         SignInManager<ApplicationUser> signInManager,
         RoleManager<IdentityRole> roleManager,
+        ILeaveAllocationsService leaveAllocationsService,
         ILogger<RegisterModel> logger,
         IEmailSender emailSender)
     {
@@ -29,6 +32,7 @@ public class RegisterModel : PageModel
         _emailStore = GetEmailStore();
         _signInManager = signInManager;
         _roleManager = roleManager;
+        _leaveAllocationsService = leaveAllocationsService;
         _logger = logger;
         _emailSender = emailSender;
     }
@@ -170,6 +174,15 @@ public class RegisterModel : PageModel
                 }
 
                 var userId = await _userManager.GetUserIdAsync(user);
+                try
+                {
+                    await _leaveAllocationsService.AllocateLeave(userId);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to allocate leave for user {UserId}", userId);
+                    // Do not fail registration if allocation fails; continue.
+                }
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 var callbackUrl = Url.Page(

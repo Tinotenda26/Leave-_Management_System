@@ -1,0 +1,51 @@
+@model IEnumerable<Leave__Management_System.Models.LeaveAllocations.EmployeeListViewModel>
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="container py-4">
+    <h3>Employees</h3>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Add Employee</a>
+    </p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var e in Model)
+                    {
+                        <tr>
+                            <td>@e.EmployeeName</td>
+                            <td>@e.FirstName</td>
+                            <td>@e.LastName</td>
+                            <td>@e.EmailAddress</td>
+                            <td>
+                                <a asp-controller="LeaveAllocation" asp-action="Details" asp-route-userId="@e.EmployeeId" class="btn btn-sm btn-outline-primary">View Allocations</a>
+                                <a asp-action="Delete" asp-route-id="@e.EmployeeId" class="btn btn-sm btn-outline-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No employees found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

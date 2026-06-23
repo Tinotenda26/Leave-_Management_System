@@ -1,0 +1,30 @@
+@model Leave__Management_System.Models.LeaveTypes.LeaveTypeEditVM
+
+<div class="modal-header">
+    <h5 class="modal-title">Edit Leave Type</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <form asp-action="Edit" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" id="NameInputModal" />
+            <span asp-validation-for="Name" class="text-danger d-block mt-1"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="NumberOfDays" class="form-label"></label>
+            <input asp-for="NumberOfDays" class="form-control" />
+            <span asp-validation-for="NumberOfDays" class="text-danger d-block mt-1"></span>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <button type="submit" formmethod="post" form="" class="btn btn-primary" onclick="$('#globalModal form').submit();">Save</button>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

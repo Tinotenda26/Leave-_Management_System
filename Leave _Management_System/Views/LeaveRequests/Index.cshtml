@@ -1,0 +1,36 @@
+@model IEnumerable<Leave__Management_System.Models.LeaveRequests.LeaveRequestViewModel>
+
+@{
+    ViewData["Title"] = "Leave Requests";
+}
+
+<div class="container py-4">
+    <h3>Leave Requests</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Type</th>
+                <th>Days</th>
+                <th>Requested</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.EmployeeName</td>
+                    <td>@r.LeaveTypeName</td>
+                    <td>@r.NumberOfDays</td>
+                    <td>@r.RequestDate.ToLocalTime()</td>
+                    <td>@r.Status</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@r.Id" class="btn btn-sm btn-primary">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,52 @@
+@model Leave__Management_System.Models.LeaveRequests.LeaveRequestViewModel
+
+@{
+    ViewData["Title"] = "Request Details";
+}
+
+<div class="container py-4">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Request by @Model.EmployeeName</h5>
+
+            <dl class="row">
+                <dt class="col-sm-4">Leave type</dt>
+                <dd class="col-sm-8">@Model.LeaveTypeName</dd>
+
+                <dt class="col-sm-4">Period</dt>
+                <dd class="col-sm-8">@Model.PeriodName</dd>
+
+                <dt class="col-sm-4">Dates</dt>
+                <dd class="col-sm-8">@Model.StartDate - @Model.EndDate</dd>
+
+                <dt class="col-sm-4">Days</dt>
+                <dd class="col-sm-8">@Model.NumberOfDays</dd>
+
+                <dt class="col-sm-4">Status</dt>
+                <dd class="col-sm-8">@Model.Status</dd>
+
+                @if (!string.IsNullOrEmpty(Model.AdditionalInformation))
+                {
+                    <dt class="col-sm-4">Additional Information</dt>
+                    <dd class="col-sm-8">
+                        <p class="mb-0">@Html.Raw(System.Net.WebUtility.HtmlEncode(Model.AdditionalInformation).Replace("\n", "<br>"))</p>
+                    </dd>
+                }
+            </dl>
+
+            @if (Model.Status == Leave__Management_System.Data.LeaveRequestStatus.Pending && User.IsInRole("Supervisor"))
+            {
+                <form asp-action="Approve" method="post" class="d-inline">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-success">Approve</button>
+                </form>
+                <form asp-action="Deny" method="post" class="d-inline ms-2">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-danger">Deny</button>
+                </form>
+            }
+
+            <a asp-action="Index" class="btn btn-secondary ms-2">Back</a>
+        </div>
+    </div>
+</div>

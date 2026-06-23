@@ -1,0 +1,99 @@
+@model Leave__Management_System.Models.LeaveAllocations.AllocationEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Allocation";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="h3">Edit Leave Allocation</h2>
+            <p class="text-muted">Update original and remaining days for @Model.EmployeeName</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <!-- Read-only allocation details -->
+                    <div class="mb-4 pb-4 border-bottom">
+                        <h6 class="text-muted mb-3">Allocation Details</h6>
+                        <dl class="row mb-0">
+                            <dt class="col-sm-5">Employee:</dt>
+                            <dd class="col-sm-7">
+                                <strong>@Model.EmployeeName</strong><br />
+                                <small class="text-muted">@Model.EmployeeId</small>
+                            </dd>
+
+                            <dt class="col-sm-5">Leave Type:</dt>
+                            <dd class="col-sm-7">@Model.LeaveTypeName</dd>
+
+                            <dt class="col-sm-5">Period:</dt>
+                            <dd class="col-sm-7">
+                                @Model.PeriodName<br />
+                                <small class="text-muted">@Model.PeriodStart.ToString("yyyy-MM-dd") - @Model.PeriodEnd.ToString("yyyy-MM-dd")</small>
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <!-- Edit form -->
+                    <form asp-action="EditAllocation" method="post">
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div asp-validation-summary="All" class="alert alert-danger"></div>
+                        }
+
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="EmployeeId" />
+                        <input type="hidden" asp-for="LeaveTypeId" />
+                        <input type="hidden" asp-for="PeriodId" />
+
+                        <div class="mb-3">
+                            <label asp-for="NumberOfDays" class="form-label"></label>
+                            <input asp-for="NumberOfDays" class="form-control form-control-lg" />
+                            <small class="form-text text-muted">Total days allocated for this leave type during the period</small>
+                            <span asp-validation-for="NumberOfDays" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="RemainingDays" class="form-label"></label>
+                            <input asp-for="RemainingDays" class="form-control form-control-lg" />
+                            <small class="form-text text-muted">Days still available after approved requests</small>
+                            <span asp-validation-for="RemainingDays" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <a asp-action="AllAllocations" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="col-md-6">
+            <div class="card shadow-sm bg-light">
+                <div class="card-body">
+                    <h6 class="mb-3">📝 About These Fields</h6>
+                    <div class="mb-3">
+                        <strong>Original Days</strong>
+                        <p class="small text-muted mb-0">The total number of leave days allocated for this leave type during this period. This is typically calculated based on the employee's job level and leave type settings.</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Remaining Days</strong>
+                        <p class="small text-muted mb-0">The number of days the employee still has available. This decreases as they make approved leave requests and increases if requests are cancelled.</p>
+                    </div>
+                    <div class="alert alert-info">
+                        <small><strong>Tip:</strong> If you adjust these values, the changes take effect immediately. Update Remaining Days if you need to correct the available balance.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

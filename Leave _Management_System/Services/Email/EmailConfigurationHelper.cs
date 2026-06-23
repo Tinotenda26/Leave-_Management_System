@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Mail;
 
-namespace Leave__Management_System.Services
+namespace Leave__Management_System.Services.Email
 {
     /// <summary>
     /// Email configuration helper - provides Email Settings documentation and examples

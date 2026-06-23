@@ -1,0 +1,117 @@
+@model Leave__Management_System.Models.LeaveRequests.LeaveRequestCreateVM
+
+@{
+    ViewData["Title"] = "Request Leave";
+}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Request leave - @Model.LeaveTypeName</h5>
+
+                    <form asp-action="Create" method="post">
+                        <input type="hidden" asp-for="LeaveAllocationId" />
+                        <div class="mb-3">
+                            <label class="form-label">Period</label>
+                            <div>@Model.PeriodStart.ToString("yyyy-MM-dd") - @Model.PeriodEnd.ToString("yyyy-MM-dd")</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LeaveTypeId" class="form-label">Leave Type</label>
+                            <select asp-for="LeaveTypeId" asp-items="Model.LeaveTypeOptions" class="form-select"></select>
+                            <span asp-validation-for="LeaveTypeId" class="text-danger"></span>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Original entitlement</label>
+                                <div><strong>@Model.OriginalDays</strong> days</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Remaining days</label>
+                                <div><strong>@Model.MaxDays</strong> days</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="StartDate" class="form-label"></label>
+                            <input asp-for="StartDate" class="form-control" type="date" />
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EndDate" class="form-label"></label>
+                            <input asp-for="EndDate" class="form-control" type="date" />
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            @if (Model.MaxDays > 0)
+                            {
+                                <label asp-for="NumberOfDays" class="form-label">Number of days to request (max @Model.MaxDays)</label>
+                            }
+                            else
+                            {
+                                <label asp-for="NumberOfDays" class="form-label">Number of days to request</label>
+                            }
+                            <input asp-for="NumberOfDays" class="form-control" type="number" min="1" max="@(Model.MaxDays > 0 ? Model.MaxDays.ToString() : null)" readonly />
+                            <span asp-validation-for="NumberOfDays" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="AdditionalInformation" class="form-label"></label>
+                            <textarea asp-for="AdditionalInformation" class="form-control" rows="4" placeholder="Provide any additional information or remarks about this leave request (optional)"></textarea>
+                            <small class="form-text text-muted">Maximum 500 characters</small>
+                            <span asp-validation-for="AdditionalInformation" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit request</button>
+                        <a asp-controller="LeaveAllocation" asp-action="Details" class="btn btn-secondary ms-2">Back</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function() {
+            const startEl = document.querySelector('input[name="StartDate"]');
+            const endEl = document.querySelector('input[name="EndDate"]');
+            const numEl = document.querySelector('input[name="NumberOfDays"]');
+
+            function parseDateInput(v) {
+                return v ? new Date(v + 'T00:00:00') : null;
+            }
+
+            function updateDays() {
+                const start = parseDateInput(startEl.value);
+                const end = parseDateInput(endEl.value);
+                if (!start || !end) {
+                    numEl.value = '';
+                    return;
+                }
+                const diffMs = end - start;
+                const days = Math.floor(diffMs / (1000*60*60*24)) + 1;
+                if (isNaN(days) || days < 0) {
+                    numEl.value = '';
+                } else {
+                    numEl.value = days;
+                }
+                if (typeof(jQuery) !== 'undefined' && jQuery.validator) {
+                    jQuery(numEl).valid();
+                }
+            }
+
+            if (startEl && endEl && numEl) {
+                startEl.addEventListener('change', updateDays);
+                endEl.addEventListener('change', updateDays);
+                updateDays();
+            }
+        })();
+    </script>
+}

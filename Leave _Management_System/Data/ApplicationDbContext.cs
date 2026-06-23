@@ -14,6 +14,27 @@ namespace Leave__Management_System.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // Configure SupervisionAssignment relationships
+            builder.Entity<SupervisionAssignment>()
+                .HasOne(sa => sa.Supervisor)
+                .WithMany(u => u.SupervisedEmployees)
+                .HasForeignKey(sa => sa.SupervisorId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            builder.Entity<SupervisionAssignment>()
+                .HasOne(sa => sa.Employee)
+                .WithMany(u => u.Supervisors)
+                .HasForeignKey(sa => sa.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired()
+                .HasConstraintName("FK_SupervisionAssignment_Employee");
+
+
+            // Apply entity configurations
+            builder.ApplyConfiguration(new Configurations.LeaveRequestConfiguration());
+
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole 
                 { 
@@ -66,9 +87,16 @@ namespace Leave__Management_System.Data
                RoleId = "98b1bfb4-3b1c-4d31-9858-56324e082b6d" // Employee role
            });
 
+            // Seed leave requests
+            Data.Seed.LeaveRequestSeed.Seed(builder);
         }
 
-       
+
         public DbSet<LeaveType> LeaveTypes { get; set; }
+        public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
+        public DbSet<Period> Periods { get; set; }
+        public DbSet<LeaveRequest> LeaveRequests { get; set; }
+        public DbSet<SupervisionAssignment> SupervisionAssignments { get; set; }
     }
 }
+

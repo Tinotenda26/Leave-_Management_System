@@ -1,0 +1,106 @@
+﻿@model Leave__Management_System.Models.LeaveAllocations.EmployeeAllocationViewModel
+
+@{
+    ViewData["Title"] = "Employee Allocations";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3">Allocations — @Model.EmployeeName</h1>
+            <p class="text-muted">Review current leave allocations for this employee.</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Employee details</h5>
+                    <dl class="row mb-0 mt-3">
+                        <dt class="col-sm-4 text-muted">First name</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.FirstName)</dd>
+
+                        <dt class="col-sm-4 text-muted">Last name</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.LastName)</dd>
+
+                        <dt class="col-sm-4 text-muted">Email</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.EmailAddress)</dd>
+
+                        <dt class="col-sm-4 text-muted">Date of birth</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.DateOfBirth)</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Summary</h5>
+                    <p class="mb-0">Total allocations: <strong>@(Model.Allocations?.Count ?? 0)</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            @if ((Model.Allocations ?? Enumerable.Empty<Leave__Management_System.Models.LeaveAllocations.LeaveAllocationViewModel>()).Any())
+            {
+                var first = Model.Allocations.First();
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Leave Allocations for period @first.PeriodStart.ToString("yyyy")</h5>
+                        <div class="table-responsive mt-3">
+                            <table class="table table-hover table-borderless align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">Leave type</th>
+                                        <th scope="col">Original</th>
+                                        <th scope="col">Remaining</th>
+                                        <th scope="col" class="text-end">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var allocation in Model.Allocations)
+                                    {
+                                        <tr>
+                                                <td>@allocation.LeaveTypeName</td>
+                                                <td><span class="badge bg-primary">@allocation.NumberOfDays</span></td>
+                                                <td><span class="badge bg-warning text-dark">@allocation.RemainingDays</span></td>
+                                                <td class="text-end">
+                                                    @if (User.IsInRole("Supervisor"))
+                                                    {
+                                                        <a asp-controller="LeaveAllocation" asp-action="EditAllocation" asp-route-id="@allocation.Id" class="btn btn-sm btn-outline-primary d-block mb-2 open-edit-modal">Edit</a>
+                                                    }
+                                                    @if (allocation.Id > 0 && allocation.RemainingDays > 0)
+                                                    {
+                                                        <a asp-controller="LeaveRequests" asp-action="Create" asp-route-id="@allocation.Id" class="btn btn-sm btn-success d-block">Request</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button type="button" class="btn btn-sm btn-secondary d-block" disabled>Request</button>
+                                                    }
+                                                </td>
+                                            </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning" role="alert">
+                    <h5 class="mb-0">No leave allocations found. Please contact your manager.</h5>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @* keep validation scripts if needed *@
+}

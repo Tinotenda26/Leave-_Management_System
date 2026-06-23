@@ -1,0 +1,17 @@
+@model Leave__Management_System.Models.LeaveAllocations.EmployeeListViewModel
+
+@{
+    ViewData["Title"] = "Delete Employee";
+}
+
+<div class="container py-4">
+    <h3>Delete Employee</h3>
+
+    <div class="alert alert-danger">Are you sure you want to delete <strong>@Model.EmployeeName</strong>?</div>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="EmployeeId" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

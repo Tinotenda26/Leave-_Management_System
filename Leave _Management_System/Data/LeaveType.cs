@@ -2,7 +2,7 @@
 
 namespace Leave__Management_System.Data
 {
-    public class LeaveType
+    public class LeaveType : BaseEntity
     {
         public int Id { get; set; }
         [Column(TypeName = "nvarchar(150)")]

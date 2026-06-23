@@ -25,8 +25,33 @@
                         </li>
                         @if (User.Identity?.IsAuthenticated ?? false)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="LeaveTypes" asp-action="Index">Leave Types</a>
+                            <li class="nav-item dropdown">
+
+                                <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Employees
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Employees" asp-action="Index">Employee List</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Employees" asp-action="Create">Add Employee</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Leave Management
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="LeaveAllocation" asp-action="Details">View Employees</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="LeaveTypes" asp-action="Index">Leave Types</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Periods" asp-action="Index">Periods</a></li>
+                                    @if (User.IsInRole("Supervisor"))
+                                    {
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="LeaveAllocation" asp-action="AllAllocations">Manage Allocations</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="LeaveRequests" asp-action="Index">Review Requests</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="LeaveTypes" asp-action="Create">Create Leave Type</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Periods" asp-action="Create">Create Period</a></li>
+                                    }
+                                </ul>
                             </li>
                         }
                         
@@ -34,7 +59,13 @@
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>
-                        
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="LeaveAllocation" asp-action="Details">Leave Allocations</a>
+                            </li>
+                            
+                        }
                         </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -56,6 +87,65 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Global modal for AJAX edit forms -->
+    <div class="modal fade" id="globalModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <!-- content loaded via AJAX -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            // Delegate click for dynamic links
+            $(document).on('click', '.open-edit-modal', function (e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                if (!url) return;
+                // load partial view
+                $.get(url)
+                    .done(function (html) {
+                        $('#globalModal .modal-content').html(html);
+                        var modal = new bootstrap.Modal(document.getElementById('globalModal'));
+                        modal.show();
+                    })
+                    .fail(function () {
+                        alert('Failed to load form.');
+                    });
+            });
+
+            // Intercept form submits inside modal and POST via AJAX
+            $(document).on('submit', '#globalModal form', function (e) {
+                e.preventDefault();
+                var form = $(this);
+                var url = form.attr('action') || window.location.href;
+                var data = form.serialize();
+
+                $.post(url, data)
+                    .done(function (response) {
+                        // If JSON success, close modal and reload
+                        if (response && response.success) {
+                            var modalEl = document.getElementById('globalModal');
+                            var modal = bootstrap.Modal.getInstance(modalEl);
+                            if (modal) modal.hide();
+                            location.reload();
+                            return;
+                        }
+
+                        // If it's HTML (partial view with validation errors), replace modal content
+                        if (typeof response === 'string') {
+                            $('#globalModal .modal-content').html(response);
+                        }
+                    })
+                    .fail(function () {
+                        alert('Failed to save.');
+                    });
+            });
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

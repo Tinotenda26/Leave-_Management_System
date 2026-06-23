@@ -2,7 +2,7 @@
 using System.Net.Mail;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
-namespace Leave__Management_System.Services
+namespace Leave__Management_System.Services.Email
 {
     /// <summary>
     /// SMTP-based email sender service for sending transactional emails (confirmations, notifications, etc.)

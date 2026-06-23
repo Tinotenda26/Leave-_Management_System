@@ -1,0 +1,41 @@
+@model IEnumerable<Leave__Management_System.Models.LeaveAllocations.UserAllocationsViewModel>
+
+@{
+    ViewData["Title"] = "All User Allocations";
+}
+
+<div class="container py-4">
+    <h3>All User Allocations</h3>
+
+    @foreach (var user in Model)
+    {
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">@user.EmployeeName <small class="text-muted">@user.Email</small></h5>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Leave Type</th>
+                                <th>Original</th>
+                                <th>Remaining</th>
+                                <th>Period</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var a in user.Allocations)
+                            {
+                                <tr>
+                                    <td>@(a.LeaveType?.Name ?? a.LeaveTypeName)</td>
+                                    <td>@a.NumberOfDays</td>
+                                    <td>@a.RemainingDays</td>
+                                    <td>@a.PeriodStart.ToString("yyyy-MM-dd") - @a.PeriodEnd.ToString("yyyy-MM-dd")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
