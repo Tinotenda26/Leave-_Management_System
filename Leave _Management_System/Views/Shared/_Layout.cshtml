@@ -8,70 +8,55 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Leave__Management_System.styles.css" asp-append-version="true" />
+
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.css" rel="stylesheet" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Leave Management System</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        @if (User.Identity?.IsAuthenticated ?? false)
-                        {
-                            <li class="nav-item dropdown">
 
-                                <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Employees
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Employees" asp-action="Index">Employee List</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Employees" asp-action="Create">Add Employee</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Leave Management
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="LeaveAllocation" asp-action="Details">View Employees</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="LeaveTypes" asp-action="Index">Leave Types</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Periods" asp-action="Index">Periods</a></li>
-                                    @if (User.IsInRole("Supervisor"))
-                                    {
-                                        <li><hr class="dropdown-divider" /></li>
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="LeaveAllocation" asp-action="AllAllocations">Manage Allocations</a></li>
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="LeaveRequests" asp-action="Index">Review Requests</a></li>
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="LeaveTypes" asp-action="Create">Create Leave Type</a></li>
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Periods" asp-action="Create">Create Period</a></li>
-                                    }
-                                </ul>
-                            </li>
-                        }
-                        
-                        
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                        @if (User.Identity?.IsAuthenticated ?? false)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="LeaveAllocation" asp-action="Details">Leave Allocations</a>
-                            </li>
-                            
-                        }
-                        </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+<div class="container">
+
+<a class="navbar-brand" asp-controller="Home" asp-action="Index">
+
+
+
+Leave Management
+
+</a>
+
+<button class="navbar-toggler"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#navbar">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+<div class="collapse navbar-collapse" id="navbar">
+
+<ul class="navbar-nav ms-auto">
+
+<li class="nav-item">
+  <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link" asp-controller="Home" asp-action="About">About</a>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a>
+</li>
+
+<partial name="_LoginPartial" />
+</ul>
+</div>
+</div>
+</nav>
+ 
     <div class="container layout-container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -86,6 +71,7 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <!-- Global modal for AJAX edit forms -->
@@ -143,8 +129,63 @@
                         alert('Failed to save.');
                     });
             });
+
+            // Intercept employee cancel forms and show SweetAlert2 confirmation
+            $(document).on('submit', '.cancel-request-form', function (e) {
+                e.preventDefault();
+                var form = $(this);
+                Swal.fire({
+                    title: 'Cancel leave request?',
+                    text: 'Are you sure you want to cancel this leave request? The days will be refunded.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, cancel it',
+                    cancelButtonText: 'No, keep it'
+                }).then(function(result) {
+                    if (result.isConfirmed) {
+                        var url = form.attr('action') || window.location.href;
+                        var data = form.serialize();
+                        $.post(url, data)
+                            .done(function () {
+                                Swal.fire('Cancelled', 'Your leave request has been cancelled.', 'success').then(function(){ location.reload(); });
+                            })
+                            .fail(function () {
+                                Swal.fire('Error', 'Failed to cancel the request.', 'error');
+                            });
+                    }
+                });
+            });
+
+            // Intercept confirm delete forms and show SweetAlert2 confirmation
+            $(document).on('submit', '.confirm-delete-form', function (e) {
+                e.preventDefault();
+                var form = $(this);
+                Swal.fire({
+                    title: 'Confirm deletion',
+                    text: 'Are you sure you want to permanently delete this item? This action cannot be undone.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it',
+                    cancelButtonText: 'No, keep it'
+                }).then(function(result) {
+                    if (result.isConfirmed) {
+                        var url = form.attr('action') || window.location.href;
+                        var data = form.serialize();
+                        $.post(url, data)
+                            .done(function () {
+                                Swal.fire('Deleted', 'The item was deleted successfully.', 'success').then(function(){ location.reload(); });
+                            })
+                            .fail(function () {
+                                Swal.fire('Error', 'Failed to delete the item.', 'error');
+                            });
+                    }
+                });
+            });
         });
     </script>
+
+    <!-- FullCalendar Script -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

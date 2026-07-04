@@ -4,69 +4,176 @@
 
 <div class="container py-5">
     <div class="text-center mb-4">
-        <h1 class="display-4">Welcome to Leave Management System</h1>
-        <p class="text-muted">Use the links below to navigate the application.</p>
+        <h1>Welcome to Leave Management System</h1>
+
+        <p>
+
+            Manage employee leave requests faster, easier and securely.
+
+        </p>
+
+        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-warning btn-lg">Get Started</a>
+
+        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-light btn-lg">Login</a>
+
     </div>
 
-    <div class="row g-3">
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Employees</h5>
-                    <p class="card-text text-muted">View and manage employees.</p>
-                    <div class="mt-auto">
-                        <a asp-controller="Employees" asp-action="Index" class="btn btn-primary me-2">Employee List</a>
-                        @if (User.Identity?.IsAuthenticated ?? false)
-                        {
-                            <a asp-controller="Employees" asp-action="Create" class="btn btn-outline-secondary">Add</a>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Leave Management</h5>
-                    <p class="card-text text-muted">Leave types, periods and allocations.</p>
-                    <div class="mt-auto">
-                        <a asp-controller="LeaveTypes" asp-action="Index" class="btn btn-primary me-2">Leave Types</a>
-                        <a asp-controller="Periods" asp-action="Index" class="btn btn-outline-secondary me-2">Periods</a>
-                        @if (User.IsInRole("Supervisor"))
-                        {
-                            <a asp-controller="LeaveAllocation" asp-action="AllAllocations" class="btn btn-warning">Manage Allocations</a>
-                        }
-                        else if (User.Identity?.IsAuthenticated ?? false)
-                        {
-                            <a asp-controller="LeaveAllocation" asp-action="Details" class="btn btn-outline-secondary">My Allocations</a>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Requests</h5>
-                    <p class="card-text text-muted">Create or review leave requests.</p>
-                    <div class="mt-auto">
-                        @if (User.IsInRole("Supervisor"))
-                        {
-                            <a asp-controller="LeaveRequests" asp-action="Index" class="btn btn-primary">Review Requests</a>
-                        }
-                        else if (User.Identity?.IsAuthenticated ?? false)
-                        {
-                            <a asp-controller="LeaveAllocation" asp-action="Details" class="btn btn-primary">Request Leave</a>
-                        }
-                        else
-                        {
-                            <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary">Login to request</a>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
+
+</section>
+
+<section class="container py-5">
+
+    <h2 class="text-center mb-5">
+
+        Why Choose Our System?
+
+    </h2>
+
+    <div class="row">
+
+        <div class="col-md-4">
+
+            <div class="card shadow">
+
+                <div class="card-body text-center">
+
+                    <h3>Apply Online</h3>
+
+                    <p>
+
+                        Employees can request leave anytime.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card shadow">
+
+                <div class="card-body text-center">
+
+                    <h3>Fast Approval</h3>
+
+                    <p>
+
+                        Managers approve requests instantly.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card shadow">
+
+                <div class="card-body text-center">
+
+                    <h3>Reports</h3>
+
+                    <p>
+
+                        Generate employee leave reports.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="bg-light py-5">
+
+    <div class="container">
+
+        <h2 class="text-center">
+
+            About Leave Management
+
+        </h2>
+
+        <p class="text-center">
+
+            The Leave Management System automates leave applications,
+            approval workflows, leave balances, notifications,
+            and reporting for organizations.
+
+        </p>
+
+    </div>
+
+</section>
+
+<section class="container py-5">
+
+    <h2 class="text-center">
+
+        Contact Us
+
+    </h2>
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <input class="form-control mb-3"
+                   placeholder="Name" />
+
+            <input class="form-control mb-3"
+                   placeholder="Email" />
+
+            <textarea class="form-control"
+                      rows="5"
+                      placeholder="Message"></textarea>
+
+            <br>
+
+            <button class="btn btn-primary">
+
+                Send Message
+
+            </button>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <h4>Office</h4>
+
+            <p>
+
+                123 Business Street<br>
+
+                Johannesburg<br>
+
+                South Africa
+
+            </p>
+
+            <h4>Email</h4>
+
+            <p>
+
+                info@leave.co.za
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
