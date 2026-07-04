@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "Welcome";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h1>Welcome to Leave Management System</h1>
+        <p class="lead">Manage employee leave requests faster, easier and securely.</p>
+
+        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-warning btn-lg me-2">Get Started</a>
+        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-light btn-lg">Login</a>
+    </div>
+
+    <section class="py-4">
+        <h2 class="text-center mb-4">Why Choose Our System?</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card shadow mb-3">
+                    <div class="card-body text-center">
+                        <h3>Apply Online</h3>
+                        <p>Employees can request leave anytime.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow mb-3">
+                    <div class="card-body text-center">
+                        <h3>Fast Approval</h3>
+                        <p>Managers approve requests instantly.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow mb-3">
+                    <div class="card-body text-center">
+                        <h3>Reports</h3>
+                        <p>Generate employee leave reports.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-light py-4">
+        <div class="container">
+            <h2 class="text-center">About Leave Management</h2>
+            <p class="text-center">The Leave Management System automates leave applications, approval workflows, leave balances, notifications, and reporting for organizations.</p>
+        </div>
+    </section>
+
+    <section class="container py-4">
+        <h2 class="text-center mb-3">Contact Us</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <input class="form-control mb-3" placeholder="Name" />
+                <input class="form-control mb-3" placeholder="Email" />
+                <textarea class="form-control mb-3" rows="5" placeholder="Message"></textarea>
+                <button class="btn btn-primary">Send Message</button>
+            </div>
+            <div class="col-md-6">
+                <h4>Office</h4>
+                <p>123 Business Street<br />Johannesburg<br />South Africa</p>
+                <h4>Email</h4>
+                <p>info@leave.co.za</p>
+            </div>
+        </div>
+    </section>
+</div>
